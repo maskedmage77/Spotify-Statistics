@@ -1,4 +1,4 @@
-import { Container, Text, Button, Group, Title, Space, useMantineTheme } from '@mantine/core';
+import { Container, Text, Button, Group, Title } from '@mantine/core';
 import { AUTH_ENDPOINT, CLIENT_ID, REDIRECT_URI, RESPONSE_TYPE, SCOPES } from '../constants/spotifyAPI'
 
 export default function Home() {   
@@ -13,16 +13,16 @@ export default function Home() {
       <Container size={700} sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
+        gap: '32px',
       }}>
-        <Title order={1}>
+        <Title order={1} sx={{lineHeight: 0.75}}>
           Spotify{' '}
           <Text component="span" color="#33B04A" inherit>
             Statistics
           </Text>
         </Title>
 
-        <Text sx={{ fontSize: '24px'}} color="dimmed">
+        <Text sx={{ fontSize: '24px'}}>
           Connect your Spotify account to see your statistics, include your top tracks, top artists, and more! This app was created using publicly available Spotify Web API by Jacob Hines.
         </Text>
 
