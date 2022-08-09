@@ -6,10 +6,11 @@
   --text: #c9c9c9;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
 
 body {
+  margin: 0;
   background-color: var(--background);
   color: var(--text);
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'Jost', sans-serif;
 }
