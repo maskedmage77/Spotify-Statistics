@@ -1,20 +1,47 @@
-import { Container, SimpleGrid, Title, Text, Paper } from '@mantine/core';
-import { useEffect } from 'react';
-import CustomCard from '../components/CustomCard';
+import { Container, SimpleGrid, Title, Text, Button } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import CustomCard from '../components/elements/CustomCard';
+import TopTracksSection from '../components/sections/TopTracksSection';
 import useToken from '../hooks/useToken';
 import useTopTracks from '../hooks/useTopTracks';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+
 
 export default function Stats() {
 
   const token = useToken();
+  
   const [shortTrackData, mediumTrackData, longTrackData] = useTopTracks(token);
+  const [displayedCard, setDisplayedCard] = useState<'short' | 'medium' | 'long'>('long');
+  const [displayedTrackData, setDisplayedTrackData] = useState(longTrackData);
+  const [message, setMessage] = useState('long');
 
   useEffect(() => {
-    if (token) {
-     
+    switch (displayedCard) {
+      case 'short':
+        setDisplayedTrackData(shortTrackData);
+        break;
+      case 'medium':
+        setDisplayedTrackData(mediumTrackData);
+        break;
+      case 'long':
+        setDisplayedTrackData(longTrackData);
+        break;
     }
-  } ,[shortTrackData])
-  
+    switch (displayedCard) {
+      case 'short':
+        setMessage('Last Month');
+        break;
+      case 'medium':
+        setMessage('the Last 6 Months');
+        break;
+      case 'long':
+        setMessage('All Time');
+        break;
+    }
+
+  }, [displayedCard, longTrackData, mediumTrackData, shortTrackData]);
+
   return (
     <div>
       <Container size={700} sx={{
@@ -37,40 +64,33 @@ export default function Stats() {
         <CustomCard />
       </SimpleGrid>
 
-      <CustomCard>
-
-        <Title order={3} sx={{ textAlign: 'center' }}>
-          Your Top Tracks of All Time
+      <CustomCard style={{
+        display: 'flex',
+        gap: '15px',
+        justifyContent: 'center',
+      }}>
+        <Title order={4} sx={{  textAlign: 'center' }}>
+          Time Period
         </Title>
-
-        
-        { 
-          longTrackData.map((track: any, index) => {
-            return (
-              <div key={index.toString()} style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                padding: '10px',
-                gap: '10px',
-              }}> 
-                <img src={track.album.images[2].url} style={{
-                  borderRadius: 8,
-                  height: '50px',
-                }}/>
-                <div>
-                  <Text>{track.name}</Text>
-                  <Text>{track.album.name}</Text>
-                </div>
-                
-
-              </div>
-            );
-          })
-          }
-        
-
+        <Button.Group>
+          <Button variant={displayedCard === "short" ? 'filled' : 'light'} sx={{ width: '125px' }} onClick={() => { setDisplayedCard('short') }}>Last Month</Button>
+          <Button variant={displayedCard === "medium" ? 'filled' : 'light'} sx={{ width: '125px' }} onClick={() => { setDisplayedCard('medium') }}>Last 6 Months</Button>
+          <Button variant={displayedCard === "long" ? 'filled' : 'light'} sx={{ width: '125px' }} onClick={() => { setDisplayedCard('long') }}>All Time</Button>
+          </Button.Group>
       </CustomCard>
+      <SwitchTransition mode={"out-in"}>
+        <CSSTransition
+          in={displayedTrackData.length > 0}
+          appear={displayedTrackData.length > 0}
+          timeout={250}
+          key={displayedCard}
+          addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
+          classNames='fade'
+        >
+          <div>asd</div>
+            {/* <TopTracksSection data={displayedTrackData} message={message} /> */}
+          </CSSTransition>
+        </SwitchTransition>
 
       </Container>
     </div>
